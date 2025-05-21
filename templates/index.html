@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Malicious Content and URL Detector</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0d1117;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 100%;
+            background: #161b22;
+            padding: 25px 0;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: bold;
+            color: #58a6ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .navbar i {
+            margin-right: 12px;
+            font-size: 36px;
+            color: #ffcc00;
+        }
+
+        /* Container */
+        .container {
+            margin-top: 120px;
+            background: #1c2128;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.1);
+            width: 70%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #58a6ff;
+            font-size: 24px;
+        }
+
+        input {
+            width: 95%;
+            padding: 14px;
+            font-size: 18px;
+            border: 2px solid #58a6ff;
+            border-radius: 8px;
+            background-color: #22272e;
+            color: white;
+        }
+
+        button {
+            background-color: #238636;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #2ea043;
+            transform: scale(1.05);
+        }
+
+        .scan-icon {
+            font-size: 20px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .benign {
+            color: #34D399;
+        }
+
+        .defacement {
+            color: #F59E0B;
+        }
+
+        .malware {
+            color: #EF4444;
+        }
+
+        .phishing {
+            color: #8B5CF6;
+        }
+
+        .unknown {
+            color: #ffffff;
+        }
+
+        .disclaimer {
+            margin-top: 80px;
+            background: #1c2128;
+            padding: 15px;
+            border-radius: 8px;
+            width: 80%;
+            text-align: center;
+            font-size: 14px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .disclaimer i {
+            font-size: 18px;
+            color: #ffcc00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h1><i class="fas fa-shield-alt"></i> CyberGuard</h1>
+    </div>
+
+    <div class="disclaimer">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>By submitting data above, you agree to our Terms of Service and Privacy Notice. Do not submit personal
+            information. We are not responsible for your submission's contents.</p>
+    </div>
+    <div class="container">
+        <h2><i class="fas fa-exclamation-triangle"></i> Malicious Files </h2>
+
+        <form id="fileUploadForm">
+            <label for="file"><strong>Upload a file (PDF/TXT only):</strong></label><br>
+            <input type="file" id="fileInput" required><br>
+            <button type="button" onclick="checkFile()"><i class="fas fa-upload scan-icon"></i> Analyze</button>
+        </form>
+
+        <!--  display  scan results -->
+        <div id="scanResults"></div>
+
+        <h2><i class="fas fa-link"></i> URL Threats </h2>
+        <input type="text" id="urlInput" placeholder="Enter URL...">
+        <button onclick="checkURL()"><i class="fas fa-search scan-icon"></i> Check URL</button>
+        <p id="urlDisplay"></p>
+        <p id="result"></p>
+    </div>
+
+
+    <script>
+        async function checkURL() {
+            const url = document.getElementById("urlInput").value.trim();
+            if (!url) {
+                alert("Please enter a URL.");
+                return;
+            }
+
+            document.getElementById("urlDisplay").innerText = `Checking: ${url}`;
+            document.getElementById("result").innerText = "Analyzing...";
+            document.getElementById("result").className = "unknown";
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ "url": url })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(" Server error:", response.status, errorText);
+                    throw new Error(`Server error: ${response.status} - ${errorText}`);
+                }
+
+                const data = await response.json();
+                console.log(" API Response:", data);
+
+                // Prevent undefined errors
+                let ml_before = data.ml_prediction_before || "unknown";
+                let ml_after = data.ml_prediction || "unknown";
+                let vt_result = data.virustotal_result || " Unknown (VirusTotal check failed)";
+                let gsb_result = data.google_safe_browsing_result || " Unknown (Google Safe Browsing check failed)";
+                let gemini_result = data.gemini_result || " Unknown (Gemini AI check failed)";
+
+                const resultElement = document.getElementById("result");
+
+                resultElement.innerHTML = `
+            <p class="${ml_before === 'malicious' ? 'malware' : 'benign'}"> ML Model Prediction (Before Retraining): <b>${ml_before.toUpperCase()}</b></p>
+            <p class="${ml_after === 'malicious' ? 'malware' : 'benign'}">ML Model Prediction (After Retraining): <b>${ml_after.toUpperCase()}</b></p>
+            <p>VirusTotal Result: ${vt_result}</p>
+            <p>Google Safe Browsing Result: ${gsb_result}</p>
+            <p>Gemini AI Result: ${gemini_result}</p>
+        `;
+
+            } catch (error) {
+                console.error(" Error:", error);
+                document.getElementById("result").innerText = " Error processing request. Try again.";
+                document.getElementById("result").className = "unknown";
+            }
+        }
+
+
+
+
+
+
+
+
+
+        async function checkFile() {
+            const fileInput = document.getElementById("fileInput");
+            if (!fileInput.files.length) {
+                alert(" Please select a file before scanning.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            document.getElementById("scanResults").innerHTML = " Scanning file... Please wait.";
+
+            try {
+                // Send request to FastAPI backend
+                const response = await fetch("/scam/", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    document.getElementById("scanResults").innerHTML = `<p class="malware">${data.error}</p>`;
+                    return;
+                }
+
+                let finalResult = `<h3>Scan Results:</h3>`;
+                finalResult += `<p>${data.ml_result}</p>`;
+                finalResult += `<p>${data.gsb_result}</p>`;
+                finalResult += `<p>${data.vt_result}</p>`;
+                finalResult += `<p>${data.gemini_result}</p>`;
+
+
+                document.getElementById("scanResults").innerHTML = finalResult;
+
+                fileInput.value = "";
+
+            } catch (error) {
+                console.error(" Error:", error);
+                document.getElementById("scanResults").innerHTML = " Error processing request.";
+            }
+        }
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

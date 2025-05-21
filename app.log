@@ -1,0 +1,41 @@
+2025-03-07 23:37:42,118 - ERROR - VirusTotal API Request Failed: 404 Client Error: Not Found for url: https://www.virustotal.com/api/v3/urls/aHR0cHM6Ly9jaGF0Z3B0LmNvbS9jLzY3Y2I3OTgzLTM3YjgtODAwYi1hOTQ3LTYxMjBkOTlkZGFiMA
+2025-03-07 23:37:42,156 - INFO - [ML Model] URL: https://chatgpt.com/c/67cb7983-37b8-800b-a947-6120d99ddab0 | Prediction: phishing
+2025-03-07 23:37:55,546 - INFO - VirusTotal result for https://www.google.com/: {'malicious': 0, 'suspicious': 0, 'undetected': 24, 'harmless': 72, 'timeout': 0}
+2025-03-07 23:37:55,555 - INFO - [ML Model] URL: https://www.google.com/ | Prediction: phishing
+2025-03-07 23:42:47,170 - INFO - VirusTotal result for https://www.google.com/: {'malicious': 0, 'suspicious': 0, 'undetected': 24, 'harmless': 72, 'timeout': 0}
+2025-03-07 23:42:47,171 - ERROR - [ERROR] ML Model Prediction Failed: No module named 'pandas'
+2025-03-07 23:42:47,171 - ERROR - [ERROR] HTTP Exception in /predict: 500: ML model failed to make a prediction.
+2025-03-07 23:42:52,860 - INFO - VirusTotal result for https://www.google.com/: {'malicious': 0, 'suspicious': 0, 'undetected': 24, 'harmless': 72, 'timeout': 0}
+2025-03-07 23:42:52,860 - ERROR - [ERROR] ML Model Prediction Failed: No module named 'pandas'
+2025-03-07 23:42:52,861 - ERROR - [ERROR] HTTP Exception in /predict: 500: ML model failed to make a prediction.
+2025-03-07 23:43:48,161 - INFO - VirusTotal result for https://www.google.com/: {'malicious': 0, 'suspicious': 0, 'undetected': 24, 'harmless': 72, 'timeout': 0}
+2025-03-07 23:43:48,162 - ERROR - [ERROR] ML Model Prediction Failed: No module named 'pandas'
+2025-03-07 23:43:48,162 - ERROR - [ERROR] HTTP Exception in /predict: 500: ML model failed to make a prediction.
+2025-03-07 23:45:01,453 - INFO - VirusTotal result for https://www.google.com/: {'malicious': 0, 'suspicious': 0, 'undetected': 24, 'harmless': 72, 'timeout': 0}
+2025-03-07 23:45:01,454 - ERROR - [ERROR] ML Model Prediction Failed: No module named 'pandas'
+2025-03-07 23:45:01,454 - ERROR - [ERROR] HTTP Exception in /predict: 500: ML model failed to make a prediction.
+2025-03-07 23:45:44,228 - INFO - VirusTotal result for https://www.google.com/: {'malicious': 0, 'suspicious': 0, 'undetected': 24, 'harmless': 72, 'timeout': 0}
+2025-03-07 23:45:44,229 - ERROR - [ERROR] ML Model Prediction Failed: No module named 'pandas'
+2025-03-07 23:45:44,229 - ERROR - [ERROR] HTTP Exception in /predict: 500: ML model failed to make a prediction.
+2025-03-07 23:56:58,571 - INFO - VirusTotal result for https://www.google.com/: {'malicious': 0, 'suspicious': 0, 'undetected': 24, 'harmless': 72, 'timeout': 0}
+2025-03-07 23:56:58,606 - ERROR - [ERROR] Label Encoding Failure: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- at_count
+- digit_count
+- dir_count
+- dot_count
+- embed_count
+- ...
+Feature names seen at fit time, yet now missing:
+- count%
+- count-
+- count-digits
+- count-http
+- count-https
+- ...
+
+2025-03-07 23:56:58,606 - ERROR - [ERROR] HTTP Exception in /predict: 500: Prediction error. Invalid model output.
+2025-03-08 02:31:02,395 - ERROR - [ERROR] Unexpected error in /predict: name 'cached_openphish_urls' is not defined
+2025-03-08 02:31:04,178 - ERROR - [ERROR] Unexpected error in /predict: name 'cached_openphish_urls' is not defined
+2025-03-08 02:31:04,686 - ERROR - [ERROR] Unexpected error in /predict: name 'cached_openphish_urls' is not defined
+2025-03-08 02:31:04,902 - ERROR - [ERROR] Unexpected error in /predict: name 'cached_openphish_urls' is not defined
